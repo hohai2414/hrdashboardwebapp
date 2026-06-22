@@ -171,6 +171,7 @@ export default function App() {
           <QualificationLicensing
             snapshots={snapshots}
             selectedSnapshotIdx={selectedSnapshotIdx}
+            filteredEmployees={filteredEmployees}
           />
         );
       case 'compliance':

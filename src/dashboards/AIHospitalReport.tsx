@@ -256,7 +256,11 @@ ${JSON.stringify(dataContext, null, 2)}
               <button
                 onClick={handleGenerateReport}
                 disabled={status === 'loading'}
-                className="flex items-center space-x-1.5 px-5 py-2.5 bg-hospital-600 hover:bg-hospital-700 text-white rounded-xl shadow-md text-xs font-bold transition-all hover-scale disabled:bg-slate-300"
+                className={`flex items-center space-x-1.5 px-5 py-2.5 rounded-xl shadow-md text-xs font-bold transition-all hover-scale ${
+                  status === 'loading'
+                    ? 'bg-slate-950 text-white/80 opacity-90 cursor-not-allowed'
+                    : 'bg-slate-900 hover:bg-black text-white'
+                }`}
               >
                 <RefreshCw size={14} className={status === 'loading' ? 'animate-spin' : ''} />
                 <span>{status === 'loading' ? 'Đang tạo báo cáo...' : 'Tạo Báo cáo AI (Gemini)'}</span>
@@ -378,7 +382,7 @@ ${JSON.stringify(dataContext, null, 2)}
           </div>
           <button
             onClick={handleGenerateReport}
-            className="px-5 py-3 bg-violet-600 hover:bg-violet-755 text-white font-bold text-xs rounded-xl shadow-lg hover-scale transition-all"
+            className="px-5 py-3 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl shadow-lg hover-scale transition-all"
           >
             Khởi tạo báo cáo ngay
           </button>

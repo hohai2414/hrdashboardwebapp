@@ -30,11 +30,13 @@ import {
 interface QualificationLicensingProps {
   snapshots: SnapshotData[];
   selectedSnapshotIdx: number;
+  filteredEmployees: EmployeeRecord[];
 }
 
 export default function QualificationLicensing({
   snapshots,
   selectedSnapshotIdx,
+  filteredEmployees,
 }: QualificationLicensingProps) {
   const currentSnapshot = snapshots[selectedSnapshotIdx];
 
@@ -53,7 +55,7 @@ export default function QualificationLicensing({
     let nurseTotal = 0, nurseQualComplete = 0;
     let techTotal = 0, techQualComplete = 0;
 
-    currentSnapshot.employees.forEach((emp) => {
+    filteredEmployees.forEach((emp) => {
       const isClinical = isClinicalGroup(emp.professionalGroup);
       const group = emp.professionalGroup.trim().toLowerCase();
 
@@ -92,13 +94,13 @@ export default function QualificationLicensing({
       nurseQualPct: nurseTotal > 0 ? (nurseQualComplete / nurseTotal) * 100 : 0,
       techQualPct: techTotal > 0 ? (techQualComplete / techTotal) * 100 : 0,
     };
-  }, [currentSnapshot]);
+  }, [filteredEmployees, currentSnapshot.snapshotDate]);
 
   // 2. Stacked Bar Chart Data: License Status by Department (Top 8)
   const deptLicenseData = useMemo(() => {
     const dataMap: Record<string, { name: string; Valid: number; Expiring: number; Expired: number; Missing: number }> = {};
     
-    currentSnapshot.employees.forEach((emp) => {
+    filteredEmployees.forEach((emp) => {
       if (!isClinicalGroup(emp.professionalGroup) || !emp.department) return;
       
       const dept = emp.department;
@@ -116,13 +118,13 @@ export default function QualificationLicensing({
     return Object.values(dataMap)
       .sort((a, b) => (b.Valid + b.Expired + b.Expiring + b.Missing) - (a.Valid + a.Expired + a.Expiring + a.Missing))
       .slice(0, 8);
-  }, [currentSnapshot]);
+  }, [filteredEmployees, currentSnapshot.snapshotDate]);
 
   // 3. Stacked Bar Chart Data: License Status by Professional Group
   const groupLicenseData = useMemo(() => {
     const dataMap: Record<string, { name: string; Valid: number; Expiring: number; Expired: number; Missing: number }> = {};
     
-    currentSnapshot.employees.forEach((emp) => {
+    filteredEmployees.forEach((emp) => {
       if (!isClinicalGroup(emp.professionalGroup)) return;
       
       const group = emp.professionalGroup;
@@ -138,13 +140,13 @@ export default function QualificationLicensing({
     });
 
     return Object.values(dataMap);
-  }, [currentSnapshot]);
+  }, [filteredEmployees, currentSnapshot.snapshotDate]);
 
   // 4. Missing license rates by department (Heatmap representation table)
   const missingLicenseHeatmap = useMemo(() => {
     const dataMap: Record<string, { dept: string; clinicalCount: number; missingCount: number; pct: number }> = {};
 
-    currentSnapshot.employees.forEach((emp) => {
+    filteredEmployees.forEach((emp) => {
       if (!isClinicalGroup(emp.professionalGroup) || !emp.department) return;
       const dept = emp.department;
       
@@ -167,13 +169,13 @@ export default function QualificationLicensing({
       .filter((item) => item.missingCount > 0)
       .sort((a, b) => b.pct - a.pct)
       .slice(0, 6);
-  }, [currentSnapshot]);
+  }, [filteredEmployees, currentSnapshot.snapshotDate]);
 
   // 5. Expiry timeline date buckets
   const expiryTimelineData = useMemo(() => {
     let d1 = 0, d2 = 0, d3 = 0, expired = 0;
 
-    currentSnapshot.employees.forEach((emp) => {
+    filteredEmployees.forEach((emp) => {
       if (!isClinicalGroup(emp.professionalGroup) || !emp.licenseExpiryDate) return;
       
       const diff = getDaysDiff(emp.licenseExpiryDate, currentSnapshot.snapshotDate);
@@ -189,11 +191,11 @@ export default function QualificationLicensing({
       { name: '31-60 ngày', value: d2, color: '#f59e0b' },
       { name: '61-90 ngày', value: d3, color: '#eab308' },
     ];
-  }, [currentSnapshot]);
+  }, [filteredEmployees, currentSnapshot.snapshotDate]);
 
   // 6. Roster mapping with Risk Levels
   const complianceRoster = useMemo(() => {
-    return currentSnapshot.employees.map((emp) => {
+    return filteredEmployees.map((emp) => {
       const isClinical = isClinicalGroup(emp.professionalGroup);
       const status = getLicenseStatus(emp, currentSnapshot.snapshotDate);
       
@@ -231,7 +233,7 @@ export default function QualificationLicensing({
         recommendedAction,
       };
     });
-  }, [currentSnapshot]);
+  }, [filteredEmployees, currentSnapshot.snapshotDate]);
 
   const columns = [
     { key: 'employeeId', header: 'Mã NV', sortable: true },

@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Building2, Users, Award, ShieldAlert, ArrowLeftRight } from 'lucide-react';
 import { SnapshotData, FilterState, EmployeeRecord } from '../types/hr';
+import { filterEmployeeList } from '../components/FilterBar';
 import { classifyDepartmentBlock, getBlockDisplayName } from '../utils/departmentClassifier';
 import { isClinicalGroup, getLicenseStatus } from '../utils/metrics';
 import { analyzeMovement, getEmployeeMovementStatus } from '../utils/movementAnalyzer';
@@ -91,8 +92,11 @@ export default function DepartmentDrilldown({
       });
     }
 
-    return [...active, ...exits];
-  }, [currentSnapshot, previousSnapshot, selectedDept]);
+    const filteredActive = filterEmployeeList(active, { ...filters, department: selectedDept });
+    const filteredExits = filterEmployeeList(exits, { ...filters, department: selectedDept });
+
+    return [...filteredActive, ...filteredExits];
+  }, [currentSnapshot, previousSnapshot, selectedDept, filters]);
 
   // Calculate movements specifically for this department
   const deptMovements = useMemo(() => {

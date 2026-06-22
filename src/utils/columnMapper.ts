@@ -166,6 +166,7 @@ export function mapRowToEmployee(
     if (standardizedKey) {
       const field = standardizedKey as keyof typeof COLUMN_ALIASES;
       
+      let cleanVal = '';
       // Clean dates
       if (
         [
@@ -175,9 +176,34 @@ export function mapRowToEmployee(
           'startDate',
         ].includes(field)
       ) {
-        result[field] = parseDateString(val);
+        cleanVal = parseDateString(val);
       } else {
-        result[field] = val !== undefined && val !== null ? String(val).trim() : '';
+        cleanVal = val !== undefined && val !== null ? String(val).trim() : '';
+      }
+
+      // Safe mapping: never overwrite a valid value with an empty string
+      if (cleanVal !== '') {
+        const existing = result[field];
+        if (existing && existing !== '') {
+          // If we already have a value, handle clashing columns by merging or prioritizing
+          if (field === 'department') {
+            if (existing !== cleanVal && !existing.includes(cleanVal)) {
+              result[field] = `${existing} / ${cleanVal}`;
+            }
+          } else if (field === 'division') {
+            if (existing !== cleanVal && !existing.includes(cleanVal)) {
+              result[field] = `${existing} / ${cleanVal}`;
+            }
+          } else if (field === 'professionalGroup') {
+            if (existing !== cleanVal && !existing.includes(cleanVal)) {
+              result[field] = `${existing} / ${cleanVal}`;
+            }
+          } else {
+            // Keep the first non-empty value encountered
+          }
+        } else {
+          result[field] = cleanVal;
+        }
       }
     }
   });

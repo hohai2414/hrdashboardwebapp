@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Network, Building2, Users, Stethoscope, ChevronRight, X, UserCheck, ShieldAlert, Award } from 'lucide-react';
+import { Network, Building2, Users, Stethoscope, ChevronRight, X, UserCheck, ShieldAlert, Award, Search } from 'lucide-react';
 import { SnapshotData, FilterState } from '../types/hr';
 import { classifyDepartmentBlock, HospitalBlock, getBlockDisplayName } from '../utils/departmentClassifier';
 import { isClinicalGroup, getLicenseStatus } from '../utils/metrics';
 import { analyzeMovement } from '../utils/movementAnalyzer';
 import DataTable from '../components/DataTable';
+import { removeVietnameseTones } from '../utils/columnMapper';
 
 interface OrganizationStructureProps {
   snapshots: SnapshotData[];
@@ -14,6 +15,9 @@ interface OrganizationStructureProps {
 export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }: OrganizationStructureProps) {
   const currentSnapshot = snapshots[selectedSnapshotIdx];
   const previousSnapshot = selectedSnapshotIdx > 0 ? snapshots[selectedSnapshotIdx - 1] : null;
+
+  // Search department state
+  const [deptSearch, setDeptSearch] = useState('');
 
   // Selected node in Org chart
   const [selectedNode, setSelectedNode] = useState<{
@@ -51,13 +55,18 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
     };
 
     const depts = Array.from(new Set(currentSnapshot.employees.map((e) => e.department).filter(Boolean)));
+    const searchNormalized = removeVietnameseTones(deptSearch);
+
     depts.forEach((dept) => {
+      if (searchNormalized && !removeVietnameseTones(dept).includes(searchNormalized)) {
+        return;
+      }
       const block = classifyDepartmentBlock(dept);
       map[block].push(dept);
     });
 
     return map;
-  }, [currentSnapshot]);
+  }, [currentSnapshot, deptSearch]);
 
   // Compute metrics for a set of employees
   const getNodeMetrics = (emps: typeof currentSnapshot.employees, filterDept?: string) => {
@@ -213,8 +222,8 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
   return (
     <div className="flex flex-col xl:flex-row gap-6 items-start">
       {/* Interactive Org Chart (Left / Main) */}
-      <div className="flex-1 w-full bg-white border border-slate-200 rounded-2xl p-6 shadow-premium">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="flex-1 w-full bg-white border border-slate-200 rounded-2xl p-6 shadow-premium font-sans">
+        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h3 className="text-sm font-bold text-slate-800 tracking-tight flex items-center">
               <Network size={18} className="text-hospital-600 mr-2" />
@@ -224,17 +233,38 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
               Phân loại khoa/phòng động dựa trên chức danh và định dạng tên đơn vị
             </p>
           </div>
-          <button
-            onClick={() => setSelectedNode({ type: 'hospital', id: 'hospital', name: 'Bệnh viện' })}
-            className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all flex items-center space-x-1.5 ${
-              selectedNode?.type === 'hospital'
-                ? 'bg-hospital-600 text-white border-hospital-600 shadow-sm'
-                : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-            }`}
-          >
-            <Building2 size={14} />
-            <span>Xem Toàn viện</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Search Input */}
+            <div className="relative min-w-[200px]">
+              <input
+                type="text"
+                placeholder="Lọc khoa/phòng..."
+                value={deptSearch}
+                onChange={(e) => setDeptSearch(e.target.value)}
+                className="w-full pl-8 pr-8 py-1.5 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-hospital-500 focus:border-transparent font-medium"
+              />
+              <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              {deptSearch && (
+                <button
+                  onClick={() => setDeptSearch('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-650"
+                >
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+            <button
+              onClick={() => setSelectedNode({ type: 'hospital', id: 'hospital', name: 'Bệnh viện' })}
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all flex items-center justify-center space-x-1.5 ${
+                selectedNode?.type === 'hospital'
+                  ? 'bg-hospital-600 text-white border-hospital-600 shadow-sm'
+                  : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              <Building2 size={14} />
+              <span>Xem Toàn viện</span>
+            </button>
+          </div>
         </div>
 
         {/* Tree Container */}
