@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Eye, EyeOff, Save, Trash2, Key } from 'lucide-react';
+import { ShieldCheck, Eye, EyeOff, Save, Trash2, Key, X } from 'lucide-react';
 import { getSavedApiKey, saveApiKey, clearApiKey } from '../services/geminiService';
 
 interface GeminiSettingsProps {
@@ -36,7 +36,16 @@ export default function GeminiSettings({ onClose, onSaveSuccess }: GeminiSetting
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-premium max-w-md mx-auto">
+    <div className="relative bg-white border border-slate-200 rounded-2xl p-6 shadow-premium max-w-md mx-auto">
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors p-1.5 hover:bg-slate-100 rounded-lg cursor-pointer"
+          aria-label="Đóng"
+        >
+          <X size={16} />
+        </button>
+      )}
       <div className="flex items-center space-x-3 mb-4">
         <div className="p-2.5 bg-violet-50 text-violet-600 rounded-xl">
           <Key size={20} />

@@ -304,8 +304,14 @@ export default function App() {
 
       {/* Settings Modal overlay */}
       {showSettingsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs">
-          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-2">
+        <div
+          onClick={() => setShowSettingsModal(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-2 cursor-default"
+          >
             <GeminiSettingsPanel onClose={() => setShowSettingsModal(false)} />
           </div>
         </div>
