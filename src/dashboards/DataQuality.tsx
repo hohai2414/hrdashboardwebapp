@@ -17,17 +17,36 @@ import DataTable from '../components/DataTable';
 interface DataQualityProps {
   snapshots: SnapshotData[];
   selectedSnapshotIdx: number;
+  filters: FilterState;
 }
 
-export default function DataQuality({ snapshots, selectedSnapshotIdx }: DataQualityProps) {
+export default function DataQuality({ snapshots, selectedSnapshotIdx, filters }: DataQualityProps) {
   const currentSnapshot = snapshots[selectedSnapshotIdx];
 
-  // 1. Evaluate data quality metrics across all snapshots
-  const report = useMemo(() => {
-    return analyzeDataQuality(snapshots);
-  }, [snapshots]);
+  // 1. Filter snapshots based on global filters
+  const filteredSnapshots = useMemo(() => {
+    return snapshots.map((snap) => {
+      const filteredEmps = snap.employees.filter((emp) => {
+        if (filters.department && emp.department !== filters.department) return false;
+        if (filters.professionalGroup && emp.professionalGroup !== filters.professionalGroup) return false;
+        if (filters.jobTitle && emp.jobTitle !== filters.jobTitle) return false;
+        if (filters.gender && emp.gender !== filters.gender) return false;
+        if (filters.qualificationLevel && emp.qualification !== filters.qualificationLevel) return false;
+        return true;
+      });
+      return {
+        ...snap,
+        employees: filteredEmps,
+      };
+    });
+  }, [snapshots, filters]);
 
-  // 2. Filter issues specific to the selected snapshot date
+  // 2. Evaluate data quality metrics across filtered snapshots
+  const report = useMemo(() => {
+    return analyzeDataQuality(filteredSnapshots);
+  }, [filteredSnapshots]);
+
+  // 3. Filter issues specific to the selected snapshot date
   // Allow viewing all issues or only ones corresponding to the selected snapshot date
   const filteredIssues = useMemo(() => {
     const selectedDate = currentSnapshot.snapshotDate;

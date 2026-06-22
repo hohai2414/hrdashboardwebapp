@@ -203,6 +203,7 @@ export default function App() {
           <DataQuality
             snapshots={snapshots}
             selectedSnapshotIdx={selectedSnapshotIdx}
+            filters={filters}
           />
         );
       default:
