@@ -185,6 +185,14 @@ export function mapRowToEmployee(
         cleanVal = val !== undefined && val !== null ? String(val).trim() : '';
       }
 
+      // Prevent assigning long numeric IDs/bank accounts to text categorical fields
+      if (
+        ['department', 'division', 'professionalGroup', 'qualification', 'gender'].includes(field) &&
+        /^\d{6,}$/.test(cleanVal)
+      ) {
+        return; // Ignore this value for text categorical fields
+      }
+
       // Safe mapping: never overwrite a valid value with an empty string
       if (cleanVal !== '') {
         const existing = result[field];
@@ -274,13 +282,20 @@ export function buildHeaderMap(headers: string[]): Record<string, string> {
       }
     }
 
-    // Fallback: substring matching if no exact alias matches
+    // Fallback: word-boundary and substring matching if no exact alias matches
     if (!matchedField) {
       for (const [field, aliases] of Object.entries(COLUMN_ALIASES)) {
-        const hasSubstring = aliases.some(
-          (alias) => normalized.includes(alias) || alias.includes(normalized)
-        );
-        if (hasSubstring && normalized.length > 2) {
+        const hasWordMatch = aliases.some((alias) => {
+          // If the alias contains spaces or punctuation (like '/'), check if it's a substring
+          if (/[^a-z0-9]/.test(alias)) {
+            return normalized.includes(alias);
+          } else {
+            // For single-word alphanumeric aliases, check if it matches a whole word
+            const words = normalized.split(/[^a-z0-9]+/);
+            return words.includes(alias);
+          }
+        });
+        if (hasWordMatch && normalized.length > 2) {
           matchedField = field;
           break;
         }
