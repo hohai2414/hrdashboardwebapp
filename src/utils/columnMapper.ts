@@ -191,11 +191,13 @@ export function mapRowToEmployee(
         if (existing && existing !== '') {
           // If we already have a value, handle clashing columns by merging or prioritizing
           if (field === 'department') {
-            if (existing !== cleanVal && !existing.includes(cleanVal)) {
+            const isPureNumber = /^\d+$/.test(cleanVal.trim());
+            if (existing !== cleanVal && !existing.includes(cleanVal) && !isPureNumber) {
               result[field] = `${existing} / ${cleanVal}`;
             }
           } else if (field === 'division') {
-            if (existing !== cleanVal && !existing.includes(cleanVal)) {
+            const isPureNumber = /^\d+$/.test(cleanVal.trim());
+            if (existing !== cleanVal && !existing.includes(cleanVal) && !isPureNumber) {
               result[field] = `${existing} / ${cleanVal}`;
             }
           } else if (field === 'professionalGroup') {
@@ -211,6 +213,20 @@ export function mapRowToEmployee(
       }
     }
   });
+
+  // Clean trailing slashes/digits from department and division names
+  if (result.department) {
+    result.department = result.department
+      .replace(/\s*\/+\s*\d+\s*$/, '') // Remove trailing slash and account numbers
+      .replace(/\/+$/, '')             // Remove trailing slash
+      .trim();
+  }
+  if (result.division) {
+    result.division = result.division
+      .replace(/\s*\/+\s*\d+\s*$/, '')
+      .replace(/\/+$/, '')
+      .trim();
+  }
 
   // Simple cleanups
   if (result.gender) {

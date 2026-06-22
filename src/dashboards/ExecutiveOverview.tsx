@@ -17,6 +17,7 @@ import { SnapshotData, FilterState, MovementRecord } from '../types/hr';
 import KpiCard from '../components/KpiCard';
 import ChartCard from '../components/ChartCard';
 import { calculateExecutiveKpis, isClinicalGroup } from '../utils/metrics';
+import { removeVietnameseTones } from '../utils/columnMapper';
 import { getEmployeeMovementStatus, analyzeMovement } from '../utils/movementAnalyzer';
 import { formatDateDisplay } from '../utils/dateUtils';
 import {
@@ -154,14 +155,54 @@ export default function ExecutiveOverview({
     });
   }, [snapshots, filters]);
 
-  // 3. Breakdown data: Professional groups
+  // 3. Breakdown data: Professional groups (grouped into standard categories)
   const groupData = useMemo(() => {
-    const counts: Record<string, number> = {};
+    const getStandardGroup = (rawGroup: string): string => {
+      if (!rawGroup) return 'Khác';
+      const group = removeVietnameseTones(rawGroup).toLowerCase().trim();
+      const words = group.split(/[^a-z0-9]+/);
+      
+      if (group.includes('bac si') || group.includes('bac sy') || group.includes('doctor') || words.includes('bs')) {
+        return 'Bác sĩ';
+      } else if (group.includes('dieu duong') || group.includes('nurse') || words.includes('dd')) {
+        return 'Điều dưỡng';
+      } else if (group.includes('ky thuat vien') || group.includes('technician') || words.includes('ktv')) {
+        return 'Kỹ thuật viên';
+      } else if (group.includes('duoc si') || group.includes('duoc sy') || group.includes('pharmacist') || words.includes('ds')) {
+        return 'Dược sĩ';
+      } else if (group.includes('ho sinh') || group.includes('midwife') || words.includes('hs')) {
+        return 'Hộ sinh';
+      } else if (
+        group.includes('hanh chinh') ||
+        group.includes('support') ||
+        group.includes('admin') ||
+        words.includes('hc') ||
+        words.includes('vp')
+      ) {
+        return 'Hành chính / Hỗ trợ';
+      }
+      return 'Khác';
+    };
+
+    const counts: Record<string, number> = {
+      'Bác sĩ': 0,
+      'Điều dưỡng': 0,
+      'Kỹ thuật viên': 0,
+      'Dược sĩ': 0,
+      'Hộ sinh': 0,
+      'Hành chính / Hỗ trợ': 0,
+      'Khác': 0,
+    };
+    
     filteredEmployees.forEach((emp) => {
-      const g = emp.professionalGroup || 'Chưa phân loại';
-      counts[g] = (counts[g] || 0) + 1;
+      const std = getStandardGroup(emp.professionalGroup);
+      counts[std] = (counts[std] || 0) + 1;
     });
-    return Object.entries(counts).map(([name, value]) => ({ name, value }));
+    
+    return Object.entries(counts)
+      .map(([name, value]) => ({ name, value }))
+      .filter((item) => item.value > 0)
+      .sort((a, b) => b.value - a.value);
   }, [filteredEmployees]);
 
   // 4. Breakdown data: Departments (Top 8 by headcount)
@@ -421,6 +462,24 @@ export default function ExecutiveOverview({
                 verticalAlign="bottom"
                 align="center"
               />
+              <text
+                x="50%"
+                y="43%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="fill-slate-700 font-extrabold text-xs"
+              >
+                Cơ cấu
+              </text>
+              <text
+                x="50%"
+                y="51%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="fill-slate-400 font-bold text-[9px] uppercase tracking-wider"
+              >
+                Nhân sự
+              </text>
             </PieChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -435,7 +494,15 @@ export default function ExecutiveOverview({
             <BarChart data={deptData} layout="vertical" margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
               <XAxis type="number" stroke="#94a3b8" fontSize={9} tickLine={false} />
-              <YAxis dataKey="name" type="category" stroke="#64748b" fontSize={9} tickLine={false} width={100} />
+              <YAxis
+                dataKey="name"
+                type="category"
+                stroke="#64748b"
+                fontSize={9}
+                tickLine={false}
+                width={140}
+                tickFormatter={(value) => (value.length > 25 ? `${value.substring(0, 25)}...` : value)}
+              />
               <Tooltip contentStyle={{ fontSize: 10 }} />
               <Bar dataKey="value" fill="#0ea5e9" radius={[0, 4, 4, 0]} barSize={10} />
             </BarChart>
