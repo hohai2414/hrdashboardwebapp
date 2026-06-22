@@ -120,9 +120,9 @@ export function analyzeDataQuality(snapshots: SnapshotData[]): DataQualityReport
       };
 
       checkCompleteness('fullName', 'Họ tên');
-      checkCompleteness('department', 'Khoa/Phòng');
+      checkCompleteness('department', 'Khoa/ phòng cụ thể');
       checkCompleteness('jobTitle', 'Chức danh');
-      checkCompleteness('professionalGroup', 'Nhóm chức danh');
+      checkCompleteness('professionalGroup', 'Nhóm Chức danh nghề nghiệp');
 
       // Date checks
       const checkDateValidity = (field: keyof EmployeeRecord, label: string, isRequired: boolean) => {

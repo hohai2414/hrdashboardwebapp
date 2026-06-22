@@ -395,7 +395,7 @@ export default function ExecutiveOverview({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Pie: Professional Group Composition */}
         <ChartCard
-          title="Phân bố theo nhóm chức danh"
+          title="Phân bố theo Nhóm Chức danh nghề nghiệp"
           subtitle="Cơ cấu nhân sự theo chuyên môn công việc"
           isEmpty={groupData.length === 0}
         >
@@ -427,7 +427,7 @@ export default function ExecutiveOverview({
 
         {/* Bar: Headcount by Department */}
         <ChartCard
-          title="Top 8 khoa/phòng đông nhân sự nhất"
+          title="Top 8 Khoa/ phòng cụ thể đông nhân sự nhất"
           subtitle="Quy mô nhân sự theo từng đơn vị trong bệnh viện"
           isEmpty={deptData.length === 0}
         >
@@ -444,8 +444,8 @@ export default function ExecutiveOverview({
 
         {/* Split: Clinical vs Non-Clinical & Gender */}
         <ChartCard
-          title="Đặc điểm lâm sàng & giới tính"
-          subtitle="Cơ cấu chuyên môn và phân bố giới tính nhân lực"
+          title="Đặc điểm lâm sàng & Phái"
+          subtitle="Cơ cấu chuyên môn và phân bố phái của nhân lực"
           isEmpty={filteredEmployees.length === 0}
         >
           <div className="flex justify-around items-center h-full pt-2">
@@ -477,7 +477,7 @@ export default function ExecutiveOverview({
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-              <span className="text-[10px] font-bold text-slate-500 mt-1">Phân bố Giới tính</span>
+              <span className="text-[10px] font-bold text-slate-500 mt-1">Phân bố Phái</span>
               <span className="text-[9px] text-slate-400">
                 {genderData.map((d) => `${d.name}: ${d.value}`).join(' | ')}
               </span>

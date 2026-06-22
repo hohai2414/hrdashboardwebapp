@@ -237,7 +237,7 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
               Sơ đồ khối tổ chức Bệnh viện
             </h3>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              Phân loại khoa/phòng động dựa trên chức danh và định dạng tên đơn vị
+              Phân loại Khoa/ phòng cụ thể dựa trên chức danh và định dạng tên đơn vị
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -245,7 +245,7 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
             <div className="relative min-w-[200px]">
               <input
                 type="text"
-                placeholder="Lọc khoa/phòng..."
+                placeholder="Lọc Khoa/ phòng cụ thể..."
                 value={deptSearch}
                 onChange={(e) => setDeptSearch(e.target.value)}
                 className="w-full pl-8 pr-8 py-1.5 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-hospital-500 focus:border-transparent font-medium"
@@ -326,7 +326,7 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
                         {getBlockDisplayName(block)}
                       </h5>
                       <span className="text-[10px] text-slate-500 font-semibold block mt-0.5 ml-5">
-                        {blockEmps.length} nhân viên • {blockDepts.length} khoa/phòng
+                        {blockEmps.length} nhân viên • {blockDepts.length} Khoa/ phòng cụ thể
                       </span>
                     </div>
 
@@ -366,7 +366,7 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
                           );
                         })
                       ) : (
-                        <span className="text-[10px] text-slate-400 italic block py-1">Không có khoa phòng nào.</span>
+                        <span className="text-[10px] text-slate-400 italic block py-1">Không có Khoa/ phòng cụ thể nào.</span>
                       )}
                     </div>
                   )}

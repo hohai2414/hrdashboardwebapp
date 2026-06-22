@@ -156,13 +156,13 @@ export default function FilterBar({ snapshots, filters, setFilters }: FilterBarP
 
           {/* Department */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Khoa/Phòng</label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Khoa/ phòng cụ thể</label>
             <select
               value={filters.department}
               onChange={(e) => handleChange('department', e.target.value)}
               className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-hospital-500"
             >
-              <option value="">Tất cả khoa phòng</option>
+              <option value="">Tất cả Khoa/ phòng cụ thể</option>
               {filterOptions.departments.map((dept) => (
                 <option key={dept} value={dept}>
                   {dept}
@@ -173,13 +173,13 @@ export default function FilterBar({ snapshots, filters, setFilters }: FilterBarP
 
           {/* Professional Group */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Nhóm chức danh</label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Nhóm Chức danh nghề nghiệp</label>
             <select
               value={filters.professionalGroup}
               onChange={(e) => handleChange('professionalGroup', e.target.value)}
               className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-hospital-500"
             >
-              <option value="">Tất cả nhóm</option>
+              <option value="">Tất cả Nhóm Chức danh nghề nghiệp</option>
               {filterOptions.groups.map((group) => (
                 <option key={group} value={group}>
                   {group}
@@ -207,13 +207,13 @@ export default function FilterBar({ snapshots, filters, setFilters }: FilterBarP
 
           {/* Gender */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Giới tính</label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase">Phái</label>
             <select
               value={filters.gender}
               onChange={(e) => handleChange('gender', e.target.value)}
               className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-hospital-500"
             >
-              <option value="">Tất cả giới tính</option>
+              <option value="">Tất cả Phái</option>
               {filterOptions.genders.map((gender) => (
                 <option key={gender} value={gender}>
                   {gender}

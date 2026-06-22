@@ -238,7 +238,7 @@ export default function QualificationLicensing({
   const columns = [
     { key: 'employeeId', header: 'Mã NV', sortable: true },
     { key: 'fullName', header: 'Họ tên', sortable: true },
-    { key: 'department', header: 'Khoa/Phòng', sortable: true },
+    { key: 'department', header: 'Khoa/ phòng cụ thể', sortable: true },
     { key: 'jobTitle', header: 'Chức danh' },
     { key: 'professionalGroup', header: 'Nhóm', sortable: true },
     {
@@ -361,7 +361,7 @@ export default function QualificationLicensing({
       {/* Stacked Bar Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartCard
-          title="Tuân thủ CCHN theo Khoa phòng (Top 8)"
+          title="Tuân thủ CCHN theo Khoa/ phòng cụ thể (Top 8)"
           subtitle="Đánh giá chi tiết tỷ lệ nhân viên Đạt / Hết hạn / Thiếu CCHN"
           isEmpty={deptLicenseData.length === 0}
         >
@@ -381,7 +381,7 @@ export default function QualificationLicensing({
         </ChartCard>
 
         <ChartCard
-          title="Tuân thủ CCHN theo Nhóm chức danh"
+          title="Tuân thủ CCHN theo Nhóm Chức danh nghề nghiệp"
           subtitle="So sánh mức độ tuân thủ pháp lý giữa các nhóm nghề nghiệp chuyên môn"
           isEmpty={groupLicenseData.length === 0}
         >
@@ -454,7 +454,7 @@ export default function QualificationLicensing({
             </div>
           ) : (
             <div className="text-center py-8 text-slate-400 text-xs italic">
-              Tuyệt vời! 100% các khoa phòng đã cập nhật CCHN lâm sàng đầy đủ.
+              Tuyệt vời! 100% các Khoa/ phòng cụ thể đã cập nhật CCHN lâm sàng đầy đủ.
             </div>
           )}
         </div>

@@ -130,7 +130,7 @@ export default function WorkforceMovement({
   const columnsHires = [
     { key: 'employeeId', header: 'Mã NV', sortable: true },
     { key: 'fullName', header: 'Họ tên', sortable: true },
-    { key: 'currentDepartment', header: 'Khoa/Phòng bổ nhiệm', sortable: true },
+    { key: 'currentDepartment', header: 'Khoa/ phòng cụ thể bổ nhiệm', sortable: true },
     { key: 'currentJobTitle', header: 'Chức danh', sortable: true },
     {
       key: 'currentSnapshot',
@@ -142,7 +142,7 @@ export default function WorkforceMovement({
   const columnsExits = [
     { key: 'employeeId', header: 'Mã NV', sortable: true },
     { key: 'fullName', header: 'Họ tên', sortable: true },
-    { key: 'previousDepartment', header: 'Khoa/Phòng đã làm việc', sortable: true },
+    { key: 'previousDepartment', header: 'Khoa/ phòng cụ thể đã làm việc', sortable: true },
     { key: 'previousJobTitle', header: 'Chức danh cũ', sortable: true },
     {
       key: 'currentSnapshot',
@@ -154,8 +154,8 @@ export default function WorkforceMovement({
   const columnsTransfers = [
     { key: 'employeeId', header: 'Mã NV', sortable: true },
     { key: 'fullName', header: 'Họ tên', sortable: true },
-    { key: 'previousDepartment', header: 'Khoa/Phòng cũ', sortable: true },
-    { key: 'currentDepartment', header: 'Khoa/Phòng mới', sortable: true },
+    { key: 'previousDepartment', header: 'Khoa/ phòng cụ thể cũ', sortable: true },
+    { key: 'currentDepartment', header: 'Khoa/ phòng cụ thể mới', sortable: true },
     { key: 'currentJobTitle', header: 'Chức danh', sortable: true },
     {
       key: 'currentSnapshot',
@@ -167,7 +167,7 @@ export default function WorkforceMovement({
   const columnsRoles = [
     { key: 'employeeId', header: 'Mã NV', sortable: true },
     { key: 'fullName', header: 'Họ tên', sortable: true },
-    { key: 'currentDepartment', header: 'Khoa/Phòng', sortable: true },
+    { key: 'currentDepartment', header: 'Khoa/ phòng cụ thể', sortable: true },
     { key: 'previousJobTitle', header: 'Chức danh cũ', sortable: true },
     { key: 'currentJobTitle', header: 'Chức danh mới', sortable: true },
     {
@@ -210,7 +210,7 @@ export default function WorkforceMovement({
           title="Tỷ lệ luân chuyển nội bộ"
           value={transfersCount}
           icon={ArrowLeftRight}
-          subtext="Điều chuyển giữa các khoa phòng"
+          subtext="Điều chuyển giữa các Khoa/ phòng cụ thể"
           color="info"
         />
       </div>
@@ -234,8 +234,8 @@ export default function WorkforceMovement({
         </ChartCard>
 
         <ChartCard
-          title="Cơ cấu biến động theo khoa phòng lớn"
-          subtitle="Top 10 khoa phòng có lượng nhân sự ra vào nhiều nhất kỳ này"
+          title="Cơ cấu biến động theo Khoa/ phòng cụ thể"
+          subtitle="Top 10 Khoa/ phòng cụ thể có lượng nhân sự ra vào nhiều nhất kỳ này"
           isEmpty={deptMovementsData.length === 0}
         >
           <ResponsiveContainer width="100%" height={220}>
@@ -287,7 +287,7 @@ export default function WorkforceMovement({
             }`}
           >
             <ArrowLeftRight size={14} />
-            <span>Điều chuyển khoa phòng ({transfersCount})</span>
+            <span>Điều chuyển Khoa/ phòng cụ thể ({transfersCount})</span>
           </button>
           <button
             onClick={() => setActiveTab('roles')}
@@ -349,7 +349,7 @@ export default function WorkforceMovement({
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-premium">
           <h4 className="text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-4 flex items-center">
             <ArrowLeftRight size={15} className="text-hospital-600 mr-2" />
-            Chi tiết luồng luân chuyển khoa phòng (Transfer Matrix Detail)
+            Chi tiết luồng luân chuyển Khoa/ phòng cụ thể (Transfer Matrix Detail)
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {transfersList.map((m, idx) => (

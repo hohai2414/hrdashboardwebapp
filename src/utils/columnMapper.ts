@@ -13,7 +13,7 @@ export function removeVietnameseTones(str: string): string {
 }
 
 // Maps standard key to list of lowercase aliases (without accents)
-const COLUMN_ALIASES: Record<keyof Omit<EmployeeRecord, 'raw' | 'snapshotDate'>, string[]> = {
+export const COLUMN_ALIASES: Record<keyof Omit<EmployeeRecord, 'raw' | 'snapshotDate'>, string[]> = {
   employeeId: [
     'ma nhan vien',
     'manv',
@@ -214,15 +214,20 @@ export function mapRowToEmployee(
 
   // Simple cleanups
   if (result.gender) {
-    const cleanGender = result.gender.toLowerCase();
-    if (cleanGender.startsWith('n') && cleanGender !== 'nam') {
-      result.gender = 'Nữ';
-    } else if (cleanGender.startsWith('n') && cleanGender === 'nam') {
+    const cleanGender = removeVietnameseTones(result.gender).toLowerCase().trim();
+    if (cleanGender.includes('nam') && !cleanGender.includes('nu')) {
       result.gender = 'Nam';
-    } else if (cleanGender.startsWith('f') || cleanGender.includes('nu')) {
+    } else if (
+      cleanGender.includes('nu') ||
+      cleanGender.startsWith('n') ||
+      cleanGender.includes('female') ||
+      cleanGender === 'f'
+    ) {
       result.gender = 'Nữ';
-    } else if (cleanGender.startsWith('m')) {
+    } else if (cleanGender === 'm' || cleanGender === 'male') {
       result.gender = 'Nam';
+    } else {
+      result.gender = 'Khác';
     }
   }
 
@@ -279,10 +284,10 @@ export function buildHeaderMap(headers: string[]): Record<string, string> {
  */
 export function guessProfessionalGroup(jobTitle: string): string {
   const title = removeVietnameseTones(jobTitle);
-  if (title.includes('bac si') || title.includes('bs')) return 'Bác sĩ';
+  if (title.includes('bac si') || title.includes('bac sy') || title.includes('bs')) return 'Bác sĩ';
   if (title.includes('dieu duong') || title.includes('dd') || title.includes('y ta')) return 'Điều dưỡng';
   if (title.includes('ky thuat vien') || title.includes('ktv')) return 'Kỹ thuật viên';
-  if (title.includes('duoc si') || title.includes('ds') || title.includes('duoc')) return 'Dược sĩ';
+  if (title.includes('duoc si') || title.includes('duoc sy') || title.includes('ds') || title.includes('duoc')) return 'Dược sĩ';
   if (title.includes('ho sinh') || title.includes('nu ho sinh') || title.includes('hs')) return 'Hộ sinh';
   if (
     title.includes('truong phong') ||

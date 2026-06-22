@@ -35,6 +35,7 @@ export function isClinicalGroup(group: string): boolean {
   
   if (
     clean.includes('bac si') ||
+    clean.includes('bac sy') ||
     clean.includes('doctor') ||
     clean.includes('dieu duong') ||
     clean.includes('nurse') ||
@@ -43,6 +44,7 @@ export function isClinicalGroup(group: string): boolean {
     clean.includes('ho sinh') ||
     clean.includes('midwife') ||
     clean.includes('duoc si') ||
+    clean.includes('duoc sy') ||
     clean.includes('pharmacist')
   ) {
     return true;
@@ -142,13 +144,13 @@ export function calculateExecutiveKpis(
     // Sub-counts
     const group = removeVietnameseTones(emp.professionalGroup);
     const words = group.split(/[^a-z0-9]+/);
-    if (group.includes('bac si') || group.includes('doctor') || words.includes('bs')) {
+    if (group.includes('bac si') || group.includes('bac sy') || group.includes('doctor') || words.includes('bs')) {
       doctorCount++;
     } else if (group.includes('dieu duong') || group.includes('nurse') || words.includes('dd')) {
       nurseCount++;
     } else if (group.includes('ky thuat vien') || group.includes('technician') || words.includes('ktv')) {
       technicianCount++;
-    } else if (group.includes('duoc si') || group.includes('pharmacist') || words.includes('ds')) {
+    } else if (group.includes('duoc si') || group.includes('duoc sy') || group.includes('pharmacist') || words.includes('ds')) {
       pharmacistCount++;
     } else if (group.includes('ho sinh') || group.includes('midwife') || words.includes('hs')) {
       midwifeCount++;

@@ -288,7 +288,7 @@ export default function DepartmentDrilldown({
   if (departmentList.length === 0) {
     return (
       <div className="text-center p-12 bg-white border rounded-2xl">
-        <p className="text-slate-400">Không tìm thấy khoa phòng nào trong dữ liệu.</p>
+        <p className="text-slate-400">Không tìm thấy Khoa/ phòng cụ thể nào trong dữ liệu.</p>
       </div>
     );
   }
@@ -304,7 +304,7 @@ export default function DepartmentDrilldown({
             <Building2 size={24} />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-800 tracking-tight">Chi tiết nhân sự theo Khoa/Phòng</h3>
+            <h3 className="text-sm font-bold text-slate-800 tracking-tight">Chi tiết nhân sự theo Khoa/ phòng cụ thể</h3>
             <p className="text-[11px] text-slate-400 mt-0.5">
               Phân tích sâu cơ cấu, biến động và tuân thủ hồ sơ chuyên môn của từng đơn vị
             </p>
