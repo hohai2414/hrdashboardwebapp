@@ -32,7 +32,8 @@ export interface ExecutiveKpiSummary {
 export function isClinicalGroup(group: string): boolean {
   if (!group) return false;
   const clean = removeVietnameseTones(group);
-  return (
+  
+  if (
     clean.includes('bac si') ||
     clean.includes('doctor') ||
     clean.includes('dieu duong') ||
@@ -43,6 +44,17 @@ export function isClinicalGroup(group: string): boolean {
     clean.includes('midwife') ||
     clean.includes('duoc si') ||
     clean.includes('pharmacist')
+  ) {
+    return true;
+  }
+
+  const words = clean.split(/[^a-z0-9]+/);
+  return (
+    words.includes('bs') ||
+    words.includes('dd') ||
+    words.includes('ktv') ||
+    words.includes('hs') ||
+    words.includes('ds')
   );
 }
 
@@ -129,17 +141,24 @@ export function calculateExecutiveKpis(
 
     // Sub-counts
     const group = removeVietnameseTones(emp.professionalGroup);
-    if (group.includes('bac si') || group.includes('doctor')) {
+    const words = group.split(/[^a-z0-9]+/);
+    if (group.includes('bac si') || group.includes('doctor') || words.includes('bs')) {
       doctorCount++;
-    } else if (group.includes('dieu duong') || group.includes('nurse')) {
+    } else if (group.includes('dieu duong') || group.includes('nurse') || words.includes('dd')) {
       nurseCount++;
-    } else if (group.includes('ky thuat vien') || group.includes('technician')) {
+    } else if (group.includes('ky thuat vien') || group.includes('technician') || words.includes('ktv')) {
       technicianCount++;
-    } else if (group.includes('duoc si') || group.includes('pharmacist')) {
+    } else if (group.includes('duoc si') || group.includes('pharmacist') || words.includes('ds')) {
       pharmacistCount++;
-    } else if (group.includes('ho sinh') || group.includes('midwife')) {
+    } else if (group.includes('ho sinh') || group.includes('midwife') || words.includes('hs')) {
       midwifeCount++;
-    } else if (group.includes('hanh chinh') || group.includes('support') || group.includes('admin')) {
+    } else if (
+      group.includes('hanh chinh') ||
+      group.includes('support') ||
+      group.includes('admin') ||
+      words.includes('hc') ||
+      words.includes('vp')
+    ) {
       adminSupportCount++;
     } else {
       otherCount++;

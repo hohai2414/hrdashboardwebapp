@@ -86,7 +86,8 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
     let completeQual = 0;
 
     list.forEach((emp) => {
-      const group = emp.professionalGroup.trim().toLowerCase();
+      const group = removeVietnameseTones(emp.professionalGroup);
+      const words = group.split(/[^a-z0-9]+/);
       const isClinical = isClinicalGroup(emp.professionalGroup);
       
       if (isClinical) {
@@ -101,17 +102,23 @@ export default function OrganizationStructure({ snapshots, selectedSnapshotIdx }
         completeQual++;
       }
 
-      if (group.includes('bac si') || group.includes('doctor')) {
+      if (group.includes('bac si') || group.includes('doctor') || words.includes('bs')) {
         doctors++;
-      } else if (group.includes('dieu duong') || group.includes('nurse')) {
+      } else if (group.includes('dieu duong') || group.includes('nurse') || words.includes('dd')) {
         nurses++;
-      } else if (group.includes('ky thuat vien') || group.includes('technician')) {
+      } else if (group.includes('ky thuat vien') || group.includes('technician') || words.includes('ktv')) {
         technicians++;
-      } else if (group.includes('duoc si') || group.includes('pharmacist')) {
+      } else if (group.includes('duoc si') || group.includes('pharmacist') || words.includes('ds')) {
         pharmacists++;
-      } else if (group.includes('ho sinh') || group.includes('midwife')) {
+      } else if (group.includes('ho sinh') || group.includes('midwife') || words.includes('hs')) {
         midwives++;
-      } else if (group.includes('hanh chinh') || group.includes('support') || group.includes('admin')) {
+      } else if (
+        group.includes('hanh chinh') ||
+        group.includes('support') ||
+        group.includes('admin') ||
+        words.includes('hc') ||
+        words.includes('vp')
+      ) {
         adminSupport++;
       } else {
         others++;
