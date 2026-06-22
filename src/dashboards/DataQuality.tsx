@@ -55,6 +55,33 @@ export default function DataQuality({ snapshots, selectedSnapshotIdx, filters }:
     );
   }, [report, currentSnapshot]);
 
+  const invertedHeaderMap = useMemo(() => {
+    const map: Record<string, string[]> = {};
+    if (!currentSnapshot.headerMap) return map;
+    Object.entries(currentSnapshot.headerMap).forEach(([excelHeader, schemaKey]) => {
+      if (!map[schemaKey]) {
+        map[schemaKey] = [];
+      }
+      map[schemaKey].push(excelHeader);
+    });
+    return map;
+  }, [currentSnapshot]);
+
+  const schemaFields = [
+    { key: 'employeeId', label: 'Mã nhân viên (ID)', suggestions: 'Mã NV, manv, Employee ID, Mã số, ID' },
+    { key: 'fullName', label: 'Họ tên', suggestions: 'Họ tên, Họ và tên, Tên nhân viên, Full Name' },
+    { key: 'gender', label: 'Giới tính', suggestions: 'Giới tính, Phái, Gender, Sex' },
+    { key: 'dateOfBirth', label: 'Ngày sinh', suggestions: 'Ngày sinh, Năm sinh, Date of Birth, DOB' },
+    { key: 'department', label: 'Khoa/Phòng (Department)', suggestions: 'Khoa/Phòng, Khoa, Phòng, Đơn vị, Phòng ban, Dept' },
+    { key: 'division', label: 'Tổ/Bộ phận (Division)', suggestions: 'Bộ phận, Tổ, Phân khoa, Section, Division' },
+    { key: 'jobTitle', label: 'Chức danh công việc', suggestions: 'Chức danh, Chức vụ, Job Title, Vị trí' },
+    { key: 'professionalGroup', label: 'Nhóm chức danh (Role)', suggestions: 'Nhóm chức danh, Nhóm nghề nghiệp, Nhóm nhân sự, Nhóm' },
+    { key: 'qualification', label: 'Trình độ chuyên môn', suggestions: 'Trình độ chuyên môn, Trình độ, Trình độ học vấn' },
+    { key: 'licenseNumber', label: 'Số CCHN', suggestions: 'Chứng chỉ hành nghề, Số CCHN, CCHN, License Number' },
+    { key: 'licenseExpiryDate', label: 'Ngày hết hạn CCHN', suggestions: 'Ngày hết hạn CCHN, Ngày hết hạn, Expiry Date' },
+    { key: 'startDate', label: 'Ngày vào làm', suggestions: 'Ngày vào làm, Ngày tuyển dụng, Start Date, Join Date' },
+  ];
+
   // Columns for the issues table
   const columns = [
     { key: 'issueType', header: 'Loại vấn đề', sortable: true },
@@ -182,6 +209,64 @@ export default function DataQuality({ snapshots, selectedSnapshotIdx, filters }:
               </span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Column Mapping Diagnostic Analysis */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-premium">
+        <h4 className="text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2 flex items-center">
+          <CheckCircle size={16} className="text-hospital-600 mr-2" />
+          Phân tích Ánh xạ Cột dữ liệu (Excel Columns mapping)
+        </h4>
+        <p className="text-[10px] text-slate-400 mb-4">
+          Kiểm tra các cột trong file Excel của bạn đã khớp với trường thông tin tương ứng trên hệ thống chưa. Nếu bị khuyết, hãy đổi tên cột trong Excel theo tên gợi ý.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {schemaFields.map((field) => {
+            const mappedCols = invertedHeaderMap[field.key] || [];
+            const isMapped = mappedCols.length > 0;
+
+            return (
+              <div
+                key={field.key}
+                className={`p-3.5 border rounded-xl flex flex-col justify-between text-xs transition-all ${
+                  isMapped
+                    ? 'bg-emerald-50/20 border-emerald-100/60'
+                    : 'bg-slate-50 border-slate-100'
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="font-bold text-slate-700 block">{field.label}</span>
+                    <span className="text-[9px] text-slate-400 block mt-0.5">Trường: {field.key}</span>
+                  </div>
+                  {isMapped ? (
+                    <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded shadow-xs">
+                      Đã ánh xạ
+                    </span>
+                  ) : (
+                    <span className="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                      Chưa nhận diện
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-3 pt-2.5 border-t border-slate-100/60">
+                  {isMapped ? (
+                    <div className="text-[11px] font-semibold text-emerald-800">
+                      Khớp với cột Excel: <code className="bg-emerald-100/50 px-1 py-0.5 rounded font-mono text-[10px]">{mappedCols.join(', ')}</code>
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-slate-500 leading-normal">
+                      <span className="text-[9px] font-bold text-rose-500 block mb-0.5">⚠️ Thiếu thông tin!</span>
+                      Hãy đổi tên cột trong file Excel thành một trong các tên sau: <strong className="text-slate-700">{field.suggestions}</strong>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

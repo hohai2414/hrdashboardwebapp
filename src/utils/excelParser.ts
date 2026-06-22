@@ -55,6 +55,7 @@ export function parseExcelWorkbook(arrayBuffer: ArrayBuffer): SnapshotData[] {
       snapshotDate: resolvedDate,
       sheetName,
       employees,
+      headerMap,
     });
   });
 

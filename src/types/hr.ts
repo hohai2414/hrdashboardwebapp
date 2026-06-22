@@ -24,6 +24,7 @@ export interface SnapshotData {
   snapshotDate: string; // YYYY-MM-DD
   sheetName: string; // original sheet name
   employees: EmployeeRecord[];
+  headerMap?: Record<string, string>;
 }
 
 export interface MovementRecord {
