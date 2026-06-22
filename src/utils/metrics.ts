@@ -1,6 +1,7 @@
 import { EmployeeRecord, MovementRecord, SnapshotData } from '../types/hr';
 import { getDaysDiff } from './dateUtils';
 import { removeVietnameseTones } from './columnMapper';
+import { classifyDepartmentBlock } from './departmentClassifier';
 
 export interface ExecutiveKpiSummary {
   totalHeadcount: number;
@@ -144,6 +145,8 @@ export function calculateExecutiveKpis(
     // Sub-counts
     const group = removeVietnameseTones(emp.professionalGroup);
     const words = group.split(/[^a-z0-9]+/);
+    const isDeptAdmin = classifyDepartmentBlock(emp.department) === 'Administrative / Support';
+
     if (group.includes('bac si') || group.includes('bac sy') || group.includes('doctor') || words.includes('bs')) {
       doctorCount++;
     } else if (group.includes('dieu duong') || group.includes('nurse') || words.includes('dd')) {
@@ -155,6 +158,7 @@ export function calculateExecutiveKpis(
     } else if (group.includes('ho sinh') || group.includes('midwife') || words.includes('hs')) {
       midwifeCount++;
     } else if (
+      isDeptAdmin ||
       group.includes('hanh chinh') ||
       group.includes('support') ||
       group.includes('admin') ||
