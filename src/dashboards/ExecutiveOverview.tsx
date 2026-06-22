@@ -86,11 +86,20 @@ export default function ExecutiveOverview({
             }),
           }
         : null,
-      activeSnapshotMovements.filter((m) =>
-        filteredEmployees.some((fe) => fe.employeeId === m.employeeId) || 
-        // For exits, the employee isn't in current, but we can match them if they belonged to the filtered category in the previous snapshot
-        (m.movementType === 'Exit' && previousSnapshot?.employees.find(pe => pe.employeeId === m.employeeId))
-      )
+      activeSnapshotMovements.filter((m) => {
+        if (m.movementType === 'Exit') {
+          const pe = previousSnapshot?.employees.find(e => e.employeeId === m.employeeId);
+          if (!pe) return false;
+          if (filters.department && pe.department !== filters.department) return false;
+          if (filters.professionalGroup && pe.professionalGroup !== filters.professionalGroup) return false;
+          if (filters.jobTitle && pe.jobTitle !== filters.jobTitle) return false;
+          if (filters.gender && pe.gender !== filters.gender) return false;
+          if (filters.employmentStatus && pe.employmentStatus !== filters.employmentStatus) return false;
+          if (filters.qualificationLevel && pe.qualification !== filters.qualificationLevel) return false;
+          return true;
+        }
+        return filteredEmployees.some((fe) => fe.employeeId === m.employeeId);
+      })
     );
   }, [currentSnapshot, previousSnapshot, filteredEmployees, filters]);
 

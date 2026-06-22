@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-hospital-50: #f0f9ff;
+  --color-hospital-100: #e0f2fe;
+  --color-hospital-200: #bae6fd;
+  --color-hospital-300: #7dd3fc;
+  --color-hospital-400: #38bdf8;
+  --color-hospital-500: #0ea5e9;
+  --color-hospital-600: #0284c7;
+  --color-hospital-700: #0369a1;
+  --color-hospital-800: #075985;
+  --color-hospital-900: #0c4a6e;
+  --color-hospital-950: #082f49;
+}
+
 @layer base {
   body {
     @apply bg-slate-50 text-slate-800 antialiased;

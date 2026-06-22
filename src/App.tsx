@@ -18,7 +18,7 @@ import DataQuality from './dashboards/DataQuality';
 import { SnapshotData, FilterState, ComplianceRule, MovementRecord } from './types/hr';
 import { analyzeMovement } from './utils/movementAnalyzer';
 import { RefreshCw, UploadCloud, Heart, Sparkles, Building2 } from 'lucide-react';
-import { formatDateDisplay, getPeriodType } from './utils/dateUtils';
+import { formatDateDisplay, getPeriodType, getMonthLabel } from './utils/dateUtils';
 
 export default function App() {
   const [snapshots, setSnapshots] = useState<SnapshotData[]>([]);
@@ -64,10 +64,36 @@ export default function App() {
   // 2. Compute selected snapshot index
   const selectedSnapshotIdx = useMemo(() => {
     if (snapshots.length === 0) return -1;
-    if (!filters.snapshotDate) return snapshots.length - 1; // Default to latest
-    const idx = snapshots.findIndex((s) => s.snapshotDate === filters.snapshotDate);
-    return idx !== -1 ? idx : snapshots.length - 1;
-  }, [snapshots, filters.snapshotDate]);
+    
+    // 2.1 If explicit snapshotDate is selected, use it
+    if (filters.snapshotDate) {
+      const idx = snapshots.findIndex((s) => s.snapshotDate === filters.snapshotDate);
+      if (idx !== -1) return idx;
+    }
+    
+    // 2.2 If month is selected, find the matching snapshot in that month
+    if (filters.month) {
+      const monthMatches = snapshots.filter((s) => getMonthLabel(s.snapshotDate) === filters.month);
+      if (monthMatches.length > 0) {
+        // If period type is also specified
+        if (filters.periodType !== 'All') {
+          const typeMatch = monthMatches.find((s) => getPeriodType(s.snapshotDate) === filters.periodType);
+          if (typeMatch) return snapshots.indexOf(typeMatch);
+        }
+        // Fallback to the latest snapshot in that month
+        return snapshots.indexOf(monthMatches[monthMatches.length - 1]);
+      }
+    }
+    
+    // 2.3 If only periodType is selected
+    if (filters.periodType !== 'All') {
+      const typeMatch = snapshots.find((s) => getPeriodType(s.snapshotDate) === filters.periodType);
+      if (typeMatch) return snapshots.indexOf(typeMatch);
+    }
+    
+    // Default to the latest snapshot in the system
+    return snapshots.length - 1;
+  }, [snapshots, filters.snapshotDate, filters.month, filters.periodType]);
 
   const activeSnapshot = selectedSnapshotIdx !== -1 ? snapshots[selectedSnapshotIdx] : null;
 

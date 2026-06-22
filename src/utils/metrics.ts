@@ -1,5 +1,6 @@
 import { EmployeeRecord, MovementRecord, SnapshotData } from '../types/hr';
 import { getDaysDiff } from './dateUtils';
+import { removeVietnameseTones } from './columnMapper';
 
 export interface ExecutiveKpiSummary {
   totalHeadcount: number;
@@ -30,7 +31,7 @@ export interface ExecutiveKpiSummary {
  */
 export function isClinicalGroup(group: string): boolean {
   if (!group) return false;
-  const clean = group.trim().toLowerCase();
+  const clean = removeVietnameseTones(group);
   return (
     clean.includes('bac si') ||
     clean.includes('doctor') ||
@@ -127,7 +128,7 @@ export function calculateExecutiveKpis(
     }
 
     // Sub-counts
-    const group = emp.professionalGroup.trim().toLowerCase();
+    const group = removeVietnameseTones(emp.professionalGroup);
     if (group.includes('bac si') || group.includes('doctor')) {
       doctorCount++;
     } else if (group.includes('dieu duong') || group.includes('nurse')) {

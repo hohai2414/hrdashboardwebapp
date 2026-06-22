@@ -74,7 +74,7 @@ export default function GeminiSettings({ onClose, onSaveSuccess }: GeminiSetting
           <button
             onClick={handleSave}
             disabled={!apiKey.trim()}
-            className="flex-1 flex items-center justify-center space-x-1.5 px-4 py-2 bg-hospital-600 hover:bg-hospital-700 disabled:bg-slate-200 text-white rounded-xl text-xs font-bold transition-all hover-scale"
+            className="flex-1 flex items-center justify-center space-x-1.5 px-4 py-2.5 bg-slate-900 hover:bg-black disabled:bg-slate-200 text-white rounded-xl text-xs font-bold transition-all hover-scale cursor-pointer"
           >
             <Save size={14} />
             <span>Lưu API Key</span>
