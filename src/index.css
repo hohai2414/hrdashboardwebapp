@@ -1,35 +1,111 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Public+Sans:wght@300;400;500;600;700;800&display=swap');
+
 @theme {
-  --color-hospital-50: #f0f9ff;
-  --color-hospital-100: #e0f2fe;
-  --color-hospital-200: #bae6fd;
-  --color-hospital-300: #7dd3fc;
-  --color-hospital-400: #38bdf8;
-  --color-hospital-500: #0ea5e9;
-  --color-hospital-600: #0284c7;
-  --color-hospital-700: #0369a1;
-  --color-hospital-800: #075985;
-  --color-hospital-900: #0c4a6e;
-  --color-hospital-950: #082f49;
+  /* Brand Guidelines Colors */
+  --color-primary: #0d1064;
+  --color-primary-container: #262a79;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #9195ea;
+  
+  --color-secondary: #00639b;
+  --color-secondary-container: #3fadfe;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #003e64;
+  
+  --color-surface: #f8f9fc;
+  --color-surface-dim: #d9dadd;
+  --color-surface-bright: #f8f9fc;
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #f2f3f6;
+  --color-surface-base: #edeef1;
+  --color-surface-high: #e7e8eb;
+  --color-surface-highest: #e1e2e5;
+  
+  --color-on-surface: #191c1e;
+  --color-on-surface-variant: #464651;
+  --color-outline: #777682;
+  --color-outline-variant: #c7c5d3;
+  --color-error: #ba1a1a;
+  
+  --color-clinical-blue: #1e215e;
+  --color-action-blue: #82c9f0;
+
+  /* Redefining existing colors in dashboard to match the new brand identity */
+  --color-hospital-50: #f2f3f6;
+  --color-hospital-100: #e0e0ff;
+  --color-hospital-200: #bfc2ff;
+  --color-hospital-300: #9195ea;
+  --color-hospital-400: #5256a6;
+  --color-hospital-500: #262a79; /* Trust Navy - default logo/KPI buttons */
+  --color-hospital-600: #0d1064; /* Trust Navy Dark - active/hover */
+  --color-hospital-700: #080a61;
+  --color-hospital-800: #004a76;
+  --color-hospital-900: #003e64;
+  --color-hospital-950: #001d33;
+
+  /* Align Violet classes used in dashboard to corporate Navy */
+  --color-violet-50: #f2f3f6;
+  --color-violet-100: #e0e0ff;
+  --color-violet-200: #bfc2ff;
+  --color-violet-500: #262a79;
+  --color-violet-650: #262a79;
+  --color-violet-600: #262a79;
+  --color-violet-700: #0d1064;
+  --color-violet-755: #080a61;
+
+  /* Overwrite the Slate family to match the brand surfaces and neutrals */
+  --color-slate-50: #f8f9fc;
+  --color-slate-100: #f2f3f6;
+  --color-slate-200: #e2e4e9;
+  --color-slate-300: #c7c5d3;
+  --color-slate-400: #777682;
+  --color-slate-500: #464651;
+  --color-slate-600: #2e3133;
+  --color-slate-700: #191c1e;
+  --color-slate-800: #191c1e;
+  --color-slate-900: #0d1064;
+  --color-slate-950: #080a61;
+
+  /* Typography */
+  --font-sans: 'Public Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Public Sans', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+
+  /* Spacing */
+  --spacing-base: 8px;
+
+  /* Rounded corners */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;      /* Standard button/input radius */
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;     /* Container/card radius */
+  --radius-2xl: 0.75rem;
 }
 
 @layer base {
   body {
     @apply bg-slate-50 text-slate-800 antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Public Sans', 'Inter', system-ui, sans-serif;
   }
+}
+
+/* Tonal ambient shadows per guideline */
+.ambient-shadow {
+  box-shadow: 0 16px 32px -8px rgba(13, 16, 100, 0.08);
 }
 
 /* Glassmorphism styling */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(199, 197, 211, 0.5);
 }
 
 .glass-panel-dark {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(13, 16, 100, 0.95);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -68,5 +144,6 @@
 }
 
 .tr-interactive:hover {
-  background-color: rgba(241, 245, 249, 0.8);
+  background-color: rgba(242, 243, 246, 0.8);
 }
+
